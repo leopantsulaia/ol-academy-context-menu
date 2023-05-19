@@ -4,15 +4,24 @@ import "./ContextMenu.scss";
 import utilities from "./utilities";
 import handleButtons from "./handleButtons";
 
-const { listColors, listItems } = data;
+const { listColors, listItems: editListItems } = data;
 const { handleContextMenu, handleOutsideClick } = utilities;
-const { handleEdit, handleClose, handleEditClick } = handleButtons;
+const { handleClose, handleEditClick } = handleButtons;
 
 const ContextMenu = () => {
   const [contextMenuPosition, setContextMenuPosition] = useState(null);
   const [contextMenuData, setContextMenuData] = useState(null);
-  const [contextMenuOpen, setContextMenuOpen] = useState(false);
+  const [, setContextMenuOpen] = useState(false);
   const [showInput, setShowInput] = useState(false);
+  const [editedText, setEditedText] = useState("");
+  const [listItems, setListItems] = useState(editListItems);
+  const [editedItemIndex, setEditedItemIndex] = useState(null);
+
+  const handleSaveClick = (itemIndex) => {
+    setListItems((prevListItems) => prevListItems.map((item, index) => (index === itemIndex ? editedText : item)));
+    setEditedText("");
+    handleClose(setContextMenuData, setContextMenuOpen, setContextMenuPosition);
+  };
 
   //return context
   return (
@@ -26,7 +35,10 @@ const ContextMenu = () => {
               style={{
                 backgroundColor: listColors[index % listColors.length],
               }}
-              onContextMenu={(event) => handleContextMenu(event, item, setContextMenuData, setContextMenuPosition, setContextMenuOpen)}
+              onContextMenu={(event) => {
+                handleContextMenu(event, item, setContextMenuData, setContextMenuPosition, setContextMenuOpen);
+                setEditedItemIndex(index);
+              }}
             >
               {item}
             </li>
@@ -61,8 +73,10 @@ const ContextMenu = () => {
               <input
                 type='text'
                 className='popup-input'
+                onChange={(event) => setEditedText(event.target.value)}
               />
             )}
+            <button onClick={() => handleSaveClick(editedItemIndex)}>save</button>
           </li>
         </ul>
       )}

@@ -12,12 +12,10 @@ const handleClose = (setContextMenuData, setContextMenuPosition, setContextMenuO
   console.log("close");
 };
 
-const handleEditClick = (setShowInput, setContextMenuData, setContextMenuPosition, setContextMenuOpen) => {
+const handleEditClick = (setShowInput) => {
   setShowInput(true);
   console.log("edit");
- };
- 
- 
+};
 
 const insiderButtons = { handleEdit, handleClose, handleEditClick };
 
